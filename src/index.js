@@ -1,3 +1,48 @@
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import ReactDOM from 'react-dom'
+import Header from './Header'
+import Content from './Content'
+import './index.css'
+
+const themeReducer = (state, action) => {
+  if (!state) return {
+    themeColor: 'red',
+  };
+  switch (action.type) {
+    case 'CHANGE_COLOR':
+      return {...state, themeColor: action.themeColor};
+    default:
+      return state
+  }
+};
+const store = createStore(themeReducer);
+
+class Index extends Component {
+
+  static childContextTypes = {
+    store: PropTypes.object,
+  };
+
+  getChildContext() {
+    return {store};
+  }
+
+  render() {
+    return (
+      <div>
+        <Header/>
+        <Content/>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <Index/>,
+  document.getElementById('root')
+);
+
 function createStore(reducer) {
   let state = null;
   const listeners = [];
@@ -7,23 +52,12 @@ function createStore(reducer) {
     state = reducer(state, action);
     listeners.forEach((listener) => listener());
   };
-  dispatch({});
+  dispatch({}); // 初始化state
   return {getState, dispatch, subscribe};
 }
 
 
-const appState = {
-  title: {
-    text: 'React.js 小书',
-    color: 'red',
-  },
-  content: {
-    text: 'React.js 小书内容',
-    color: 'blue'
-  }
-};
-
-function renderApp(newAppState, oldAppState = {}) {
+/*function renderApp(newAppState, oldAppState = {}) {
   if (newAppState === oldAppState) return;
   renderTitle(newAppState.title, oldAppState.title);
   renderContent(newAppState.content, oldAppState.content);
@@ -89,25 +123,6 @@ store.dispatch({type: 'UPDATE_TITLE_TEXT', text: '《React.js 小书》'}); // �
 store.dispatch({type: 'UPDATE_TITLE_COLOR', color: 'blue'}); // 修改标题颜色
 // renderApp(store.getState()); // 把新的数据渲染到页面上
 
-function themeReducer(state, action) {
-  if (!state) {
-    return {
-      themeName: 'red theme',
-      themeColor: 'red',
-    }
-  }
-  switch (action.type) {
-    case 'UPDATE_THEME_NAME':
-      return {...state, themeName: action.themeName};
-    case  'UPDATE_THEME_COLOR':
-      return {...state, themeColor: action.themeColor};
-    default:
-      return state;
-  }
-}
-
-const store2 = createStore(themeReducer);
-
 
 function userReducer(state = [], action) {
   switch (action.type) {
@@ -132,4 +147,4 @@ function userReducer(state = [], action) {
     default:
       return state;
   }
-}
+}*/
